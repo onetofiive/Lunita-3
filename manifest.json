@@ -1,6 +1,6 @@
 {
-  "name": "Lunitas Smertelog",
-  "short_name": "Smertelog",
+  "name": "Lunitas Smertelogg",
+  "short_name": "Smertelogg",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#faf8f5",
