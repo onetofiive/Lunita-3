@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Smertelog">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Lunitas Smertelog</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:#faf8f5;color:#2a2420;font-size:15px;line-height:1.6;min-height:100vh;padding-bottom:60px}
+header{background:#fff;border-bottom:1px solid #ede6dd;padding:20px 16px 14px;position:sticky;top:0;z-index:100}
+header h1{font-family:'Fraunces',serif;font-weight:300;font-size:22px;color:#2a2420}
+header h1 em{font-style:italic;color:#c4614a}
+header p{font-size:11px;color:#9a8f87;margin-top:2px}
+.tabs{display:flex;background:#fff;border-bottom:1px solid #ede6dd;position:sticky;top:68px;z-index:99}
+.tab{flex:1;padding:11px 4px;font-size:12px;font-weight:500;color:#9a8f87;cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:inherit;transition:all .2s;text-align:center}
+.tab.on{color:#c4614a;border-bottom-color:#c4614a}
+.pg{display:none;padding:14px}
+.pg.on{display:block}
+.card{background:#fff;border:1px solid #ede6dd;border-radius:14px;padding:14px;margin-bottom:12px}
+.ct{font-family:'Fraunces',serif;font-size:14px;font-weight:600;margin-bottom:10px;color:#2a2420}
+.lbl{display:block;font-size:11px;font-weight:500;color:#9a8f87;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 5px}
+.lbl:first-child{margin-top:0}
+select,textarea,.inp{width:100%;background:#f5f1ec;border:1px solid #e0d8d0;border-radius:9px;padding:10px 12px;font-size:13px;color:#2a2420;font-family:inherit;outline:none;-webkit-appearance:none}
+textarea{resize:vertical;min-height:75px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pain-row{display:flex;gap:3px}
+.pb{flex:1;height:34px;border:1px solid #e0d8d0;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;background:#f5f1ec;color:#9a8f87;font-family:inherit;transition:all .15s}
+.pb.on{color:#fff}
+.pb.g.on{background:#4a8a6a}
+.pb.y.on{background:#d4901e}
+.pb.r.on{background:#c4614a}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tag{padding:6px 12px;border-radius:20px;font-size:12px;background:#f5f1ec;border:1px solid #e0d8d0;cursor:pointer;color:#9a8f87;font-family:inherit;transition:all .15s}
+.tag.on{background:#f2e8e5;border-color:#c4614a;color:#c4614a;font-weight:500}
+.tag.p.on{background:#ede8f2;border-color:#7a5c8a;color:#7a5c8a;font-weight:500}
+.btn{width:100%;padding:14px;background:#c4614a;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px;font-family:inherit}
+.btn:active{opacity:.85}
+.alert{background:#fdf3e3;border:1px solid #d4901e;border-radius:11px;padding:13px 14px;margin-bottom:14px;font-size:12px}
+.alert-t{font-weight:700;color:#d4901e;margin-bottom:5px}
+.alert ul{padding-left:16px;color:#6b4e1a}
+.alert li{margin-bottom:3px}
+.entry{background:#fff;border:1px solid #ede6dd;border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.emeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.edate{font-size:13px;font-weight:600;color:#2a2420}
+.pill{padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;color:#fff}
+.pl{background:#4a8a6a}.pm{background:#d4901e}.ph{background:#c4614a}
+.etags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.etag{padding:2px 8px;border-radius:10px;font-size:11px;background:#f2e8e5;color:#c4614a;border:1px solid #e8c4bb}
+.edet{font-size:12px;color:#9a8f87;margin-bottom:2px}
+.enote{font-size:12px;color:#9a8f87;font-style:italic;border-top:1px solid #ede6dd;padding-top:7px;margin-top:6px;white-space:pre-wrap}
+.delbtn{font-size:11px;color:#ccc;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;margin-top:5px;font-family:inherit}
+.empty{text-align:center;padding:40px 16px;color:#9a8f87;font-size:13px}
+.tip{border-radius:12px;padding:13px 14px;margin-bottom:10px;border:1px solid;font-size:13px;line-height:1.7}
+.tip-r{background:#fff4f2;border-color:#e8b4aa}
+.tip-r .tit{color:#c4614a}
+.tip-y{background:#fdf3e3;border-color:#f0c070}
+.tip-y .tit{color:#a07010}
+.tip-p{background:#ede8f2;border-color:#c0a8d4}
+.tip-p .tit{color:#7a5c8a}
+.tip-b{background:#e8f4ee;border-color:#9ecfb4}
+.tip-b .tit{color:#2a6a4a}
+.tit{font-weight:700;margin-bottom:6px;font-size:13px}
+.todaynote{background:#fff8f5;border:1px dashed #c4614a;border-radius:10px;padding:13px 14px;margin-bottom:14px;font-size:12px;line-height:1.75;color:#5a3530;font-style:italic}
+.todaynote strong{font-style:normal;font-size:11px;color:#c4614a;display:block;margin-bottom:3px}
+.slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9a8f87;margin:16px 0 9px}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#4a8a6a;color:#fff;padding:9px 22px;border-radius:20px;font-size:13px;font-weight:500;z-index:999;display:none;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✓ Oppføring lagret!</div>
+
+<header>
+  <h1>Lunitas <em>Smertelog</em></h1>
+  <p>Privat symptomlogg</p>
+</header>
+
+<div class="tabs">
+  <button class="tab on" onclick="showTab('logg',this)">Ny oppføring</button>
+  <button class="tab" onclick="showTab('historikk',this)">Historikk</button>
+  <button class="tab" onclick="showTab('tips',this)">Viktig info</button>
+</div>
+
+<div class="pg on" id="pg-logg">
+  <div class="alert">
+    <div class="alert-t">⚠️ Søk lege umiddelbart ved:</div>
+    <ul>
+      <li>Intens ensidig smerte som ikke slipper</li>
+      <li>Feber over 38°C + underlivssmerte</li>
+      <li>Kraftig blødning (gjennomvåt bind under 1 time)</li>
+      <li>Svimmelhet eller besvimelse med smerter</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct">Dato og tid</div>
+    <div class="row2">
+      <div><span class="lbl">Dato</span><input class="inp" type="text" id="dato"></div>
+      <div><span class="lbl">Tid</span><input class="inp" type="text" id="tid"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Smerte</div>
+    <span class="lbl">Intensitet (1–10)</span>
+    <div class="pain-row" id="painRow"></div>
+    <span class="lbl">Type smerte</span>
+    <div class="tags" id="tType">
+      <button class="tag" onclick="tog(this)">Murring</button>
+      <button class="tag" onclick="tog(this)">Stikking</button>
+      <button class="tag" onclick="tog(this)">Krampe</button>
+      <button class="tag" onclick="tog(this)">Trykk</button>
+      <button class="tag" onclick="tog(this)">Brenning</button>
+      <button class="tag" onclick="tog(this)">Konstant</button>
+      <button class="tag" onclick="tog(this)">Bølger</button>
+    </div>
+    <span class="lbl">Lokasjon</span>
+    <div class="tags" id="tLok">
+      <button class="tag" onclick="tog(this)">Venstre side</button>
+      <button class="tag" onclick="tog(this)">Høyre side</button>
+      <button class="tag" onclick="tog(this)">Begge sider</button>
+      <button class="tag" onclick="tog(this)">Korsrygg</button>
+      <button class="tag" onclick="tog(this)">Midt foran</button>
+      <button class="tag" onclick="tog(this)">Stråler til rygg</button>
+      <button class="tag" onclick="tog(this)">Stråler til lår</button>
+    </div>
+    <span class="lbl">Hva hjelper</span>
+    <div class="tags" id="tHjelp">
+      <button class="tag p" onclick="tog(this)">Fosterstilling</button>
+      <button class="tag p" onclick="tog(this)">Varme</button>
+      <button class="tag p" onclick="tog(this)">Hvile</button>
+      <button class="tag p" onclick="tog(this)">Ingenting hjelper</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Blødning</div>
+    <span class="lbl">Mengde</span>
+    <select id="bMengde">
+      <option value="">— Velg —</option>
+      <option>Ingen blødning</option>
+      <option>Spotting / dråper</option>
+      <option>Lett</option>
+      <option>Moderat</option>
+      <option>Kraftig</option>
+      <option>Svært kraftig</option>
+    </select>
+    <span class="lbl">Farge</span>
+    <div class="tags" id="tFarge">
+      <button class="tag" onclick="tog(this)">Rosa</button>
+      <button class="tag" onclick="tog(this)">Lys rød</button>
+      <button class="tag" onclick="tog(this)">Mørk rød</button>
+      <button class="tag" onclick="tog(this)">Rustfarget / brunt</button>
+      <button class="tag" onclick="tog(this)">Svart</button>
+      <button class="tag" onclick="tog(this)">Koagel / klumper</button>
+    </div>
+    <span class="lbl">Mønster</span>
+    <div class="tags" id="tMonster">
+      <button class="tag" onclick="tog(this)">Starter og stopper</button>
+      <button class="tag" onclick="tog(this)">Kontinuerlig</button>
+      <button class="tag" onclick="tog(this)">Mellom mensene</button>
+      <button class="tag" onclick="tog(this)">Under/etter samleie</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Andre symptomer</div>
+    <div class="tags" id="tAndre">
+      <button class="tag" onclick="tog(this)">Kvalme</button>
+      <button class="tag" onclick="tog(this)">Svimmelhet</button>
+      <button class="tag" onclick="tog(this)">Feber</button>
+      <button class="tag" onclick="tog(this)">Slapphet</button>
+      <button class="tag" onclick="tog(this)">Smerter ved vannlating</button>
+      <button class="tag" onclick="tog(this)">Unormal utflod</button>
+    </div>
+    <span class="lbl">Feber (°C)</span>
+    <input class="inp" type="text" id="feber" placeholder="f.eks. 37.8">
+  </div>
+  <div class="card">
+    <div class="ct">Medisin / tiltak</div>
+    <div class="tags" id="tMed">
+      <button class="tag p" onclick="tog(this)">Paracet</button>
+      <button class="tag p" onclick="tog(this)">Ibuprofen</button>
+      <button class="tag p" onclick="tog(this)">Varmepose</button>
+      <button class="tag p" onclick="tog(this)">Kontaktet lege</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Egne ord</div>
+    <textarea id="notat" placeholder="Beskriv hva du merker, rekkefølge, hva som skjedde…"></textarea>
+  </div>
+  <button class="btn" onclick="lagre()">Lagre oppføring</button>
+</div>
+
+<div class="pg" id="pg-historikk">
+  <div id="hListe"></div>
+</div>
+
+<div class="pg" id="pg-tips">
+  <div class="slbl">Lunitas bakgrunn</div>
+  <div class="tip tip-b">
+    <div class="tit">Medisinsk historikk</div>
+    Lunita har vært gravid to ganger. Første svangerskap endte med medisinsk abort. Mellom de to svangerskapene fikk hun betennelse i livmor og venstre eggstokk og måtte opereres — betennelsen og restvev ble suget ut. Andre svangerskap endte med spontanabort.<br><br>
+    Etter operasjonen har hun hatt vedvarende smerter: mensen med kort mellomrom, mensen som stopper etter 3 dager og kommer tilbake, og varierende smertemønstre.
+  </div>
+  <div class="todaynote">
+    <strong>Første loggede episode — 28. mai 2026</strong>
+    Rosa spotting → rustfarget blødning → stikkende murringer → fosterstilling → korsrygg begge sider → ekstreme kramper høyre side foran → venstre side → stopp
+  </div>
+  <div class="slbl">Medisinsk oppfølging</div>
+  <div class="tip tip-r">
+    <div class="tit">🔴 Søk lege snarest</div>
+    Symptommønsteret kan tyde på <strong>adnexitt, endometriose eller adhesjoner</strong> etter operasjonen.<br><br>
+    <strong>Ta kontakt med fastlege eller gynekolog innen 1–2 dager. Nevn hele historikken.</strong>
+  </div>
+  <div class="tip tip-p">
+    <div class="tit">💜 Spør legen om</div>
+    • <strong>Ultralyd</strong> av eggstokker og eggledere<br>
+    • <strong>CA-125 blodprøve</strong> — markør for endometriose/betennelse<br>
+    • <strong>CRP og hvite blodceller</strong><br>
+    • <strong>Henvisning til gynekolog</strong> hvis fastlegen ikke følger opp
+  </div>
+  <div class="tip tip-y">
+    <div class="tit">⚠️ Logg alltid</div>
+    • Dag i syklus (dag 1 = første dag med fullblødning)<br>
+    • Om smerten er ensidig og hvilken side<br>
+    • Om fosterstilling hjelper<br>
+    • Mønster over tid
+  </div>
+</div>
+
+<script>
+var pv=null;
+(function(){
+  var n=new Date();
+  document.getElementById('dato').value=n.toLocaleDateString('no-NO');
+  document.getElementById('tid').value=n.toTimeString().slice(0,5);
+  var pr=document.getElementById('painRow');
+  for(var i=1;i<=10;i++){
+    var c=i<=3?'g':i<=6?'y':'r';
+    pr.innerHTML+='<button class="pb '+c+'" data-v="'+i+'" onclick="sp('+i+',this)">'+i+'</button>';
+  }
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+})();
+function showTab(n,el){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('pg-'+n).classList.add('on');
+  el.classList.add('on');
+  if(n==='historikk')visH();
+}
+function sp(v,el){
+  pv=v;
+  document.querySelectorAll('.pb').forEach(function(b){b.classList.toggle('on',parseInt(b.getAttribute('data-v'))===v)});
+}
+function tog(el){el.classList.toggle('on')}
+function sel(id){return Array.from(document.querySelectorAll('#'+id+' .on')).map(function(e){return e.textContent})}
+function getData(){try{return JSON.parse(localStorage.getItem('lunita-v2')||'[]')}catch(e){return[]}}
+function setData(d){try{localStorage.setItem('lunita-v2',JSON.stringify(d))}catch(e){}}
+function lagre(){
+  var o={id:Date.now(),dato:document.getElementById('dato').value,tid:document.getElementById('tid').value,smerte:pv,type:sel('tType'),lok:sel('tLok'),hjelp:sel('tHjelp'),mengde:document.getElementById('bMengde').value,farge:sel('tFarge'),monster:sel('tMonster'),andre:sel('tAndre'),feber:document.getElementById('feber').value,med:sel('tMed'),notat:document.getElementById('notat').value};
+  var d=getData();d.unshift(o);setData(d);
+  var t=document.getElementById('toast');t.style.display='block';setTimeout(function(){t.style.display='none'},2000);
+  reset();
+  showTab('historikk',document.querySelectorAll('.tab')[1]);
+}
+function reset(){
+  pv=null;
+  document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.tag').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('bMengde').value='';document.getElementById('feber').value='';document.getElementById('notat').value='';
+  var n=new Date();document.getElementById('dato').value=n.toLocaleDateString('no-NO');document.getElementById('tid').value=n.toTimeString().slice(0,5);
+}
+function visH(){
+  var c=document.getElementById('hListe'),d=getData();
+  if(!d.length){c.innerHTML='<div class="empty">Ingen oppføringer ennå.<br>Fyll inn din første under Ny oppføring.</div>';return}
+  c.innerHTML=d.map(function(o){
+    var pc=!o.smerte?'':o.smerte<=3?'pl':o.smerte<=6?'pm':'ph';
+    var tags=(o.type||[]).concat(o.lok||[]);
+    return '<div class="entry"><div class="emeta"><div class="edate">'+o.dato+' '+o.tid+'</div>'+(o.smerte?'<div class="pill '+pc+'">Smerte '+o.smerte+'/10</div>':'')+'</div>'+(tags.length?'<div class="etags">'+tags.map(function(t){return'<span class="etag">'+t+'</span>'}).join('')+'</div>':'')+(o.mengde?'<div class="edet">🩸 '+o.mengde+(o.farge&&o.farge.length?' · '+o.farge.join(', '):'')+'</div>':'')+(o.andre&&o.andre.length?'<div class="edet">Ellers: '+o.andre.join(', ')+'</div>':'')+(o.med&&o.med.length?'<div class="edet">Tiltak: '+o.med.join(', ')+'</div>':'')+(o.notat?'<div class="enote">'+o.notat+'</div>':'')+'<button class="delbtn" onclick="slett('+o.id+')">Slett</button></div>';
+  }).join('');
+}
+function slett(id){
+  if(!confirm('Slett denne oppføringen?'))return;
+  setData(getData().filter(function(o){return o.id!==id}));visH();
+}
+</script>
+</body>
+</html>
