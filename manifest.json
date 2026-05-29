@@ -1,20 +1,10 @@
 {
-  "name": "Lunitas Smertelogg",
-  "short_name": "Smertelogg",
-  "start_url": "/",
+  "name": "Lunitas Smertelog",
+  "short_name": "Smertelog",
+  "start_url": "/Lunita-3/",
+  "scope": "/Lunita-3/",
   "display": "standalone",
   "background_color": "#faf8f5",
   "theme_color": "#c4614a",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "icons": []
 }
